@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Denúncia</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+
+    <!-- CSS Personalizado -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
+
+</head>
+<body>
+    <div id="app">
+        <div class="container">
+
+            <div class="row justify-content-center">
+        
+                <div class="col-sm-8 col-md-6">
+        
+                    <h1 class="text-center mb-4">Formulário de Denúncia</h1>
+        
+                    <p class="text-center mb-4">Sua denúncia é totalmente anônima e não coletaremos nenhuma informação que possa identificá-lo(a). 
+                        Você não é obrigado(a) a se identificar e garantimos absoluto sigilo em relação à sua denúncia. Portanto, sinta-se à vontade 
+                        para fornecer as informações necessárias para a denúncia com tranquilidade e segurança.
+                    </p>
+        
+                    <form id="form-denuncia" method="POST" @submit.prevent="submitForm">
+        
+                        <div class="mb-3">
+                            <label for="denuncia" class="form-label">Denúncia:</label>
+                            <textarea class="form-control" id="denuncia" name="denuncia" rows="10" placeholder="Descreva a denúncia" v-model="denuncia" required></textarea>
+                        </div>
+        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Enviar Denúncia</button>
+                        </div>
+        
+                    </form>
+        
+                </div>
+        
+            </div>
+        
+        </div>
+    </div>
+    
+    <!-- Bootstrap JavaScript (incluído no final do documento para carregar mais rápido) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    denuncia: ''
+                }
+            },
+            methods: {
+                submitForm() {
+                    if (!this.denuncia) {
+                        alert('Por favor, informe a denúncia.')
+                        return
+                    }
+                    // enviar denúncia para o email
+                    const url = 'processa.php'
+                    const data = {
+                          denuncia: this.denuncia
+                    }
+                    fetch(url, {
+                        method: 'POST',
+                        body: JSON.stringify(data),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('Denúncia enviada com sucesso!')
+                            this.denuncia = ''
+                        } else {
+                            throw new Error(response.statusText)
+                        }
+                    })
+                    .catch(error => {
+                        alert('Houve um erro ao enviar a denúncia. Por favor, tente novamente mais tarde.')
+                        console.error(error)
+                    })
+                }
+            }
+        })
+    </script>
+    
+
+</body>
+</html>
